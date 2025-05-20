@@ -1,11 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace MonoTetris3D
 {
     internal class TetriminoFactory
     {
+        private Random _random = new Random();
+
         public TetriminoFactory() { }
+
         public Tetrimino Generate(Tetriminoes shapeType)
         {
             Shape[] shapes = new Shape[4];
@@ -208,6 +212,11 @@ namespace MonoTetris3D
             t.SetShape(shapes, shapeType, color);
 
             return t;
+        }
+
+        public Tetrimino GenerateRandom()
+        {
+            return Generate((Tetriminoes)_random.Next(7));
         }
     }
 }

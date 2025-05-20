@@ -58,7 +58,8 @@ namespace MonoTetris3D
 
             TitleScreen titleScreen = new TitleScreen();
             TestScene testScene = new TestScene();
-            SceneManager.PushScene(testScene);
+            MarathonGame marathonGame = new MarathonGame();
+            SceneManager.PushScene(marathonGame);
         }
 
         protected override void Update(GameTime gameTime)

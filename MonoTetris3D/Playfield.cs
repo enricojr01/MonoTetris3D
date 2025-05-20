@@ -178,5 +178,10 @@ namespace MonoTetris3D
 
             return cells;
         }
+        public void DrawTetrimino(Tetrimino t, int column, int row)
+        {
+            Matrix world = Matrix.CreateTranslation(_position) * Matrix.CreateTranslation(column * 0.4f, -row * 0.4f, 0);
+            t.Draw(world);
+        }
     }
 }

@@ -30,7 +30,7 @@ namespace MonoTetris3D
 
         public void RotateRight()
         {
-            _shapeID = (_shapeID - 1) % Shapes.Length;
+            _shapeID = (_shapeID - 1 + Shapes.Length) % Shapes.Length;
         }
 
         public void Draw(Matrix world)
