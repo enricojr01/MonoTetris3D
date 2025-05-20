@@ -173,6 +173,35 @@ namespace MonoTetris3D
                         });
                         break;
                     }
+                case Tetriminoes.Z:
+                    {
+                        color = Color.Red;
+                        shapes[0] = new Shape(new string[]
+                        {
+                            "110",
+                            "011",
+                            "000",
+                        });
+                        shapes[1] = new Shape(new string[]
+                        {
+                            "001",
+                            "011",
+                            "010",
+                        });
+                        shapes[2] = new Shape(new string[]
+                        {
+                            "000",
+                            "110",
+                            "011",
+                        });
+                        shapes[3] = new Shape(new string[]
+                        {
+                            "010",
+                            "110",
+                            "100",
+                        });
+                        break;
+                    }
             }
 
             Tetrimino t = new Tetrimino();

@@ -6,8 +6,15 @@ namespace MonoTetris3D
     internal class TitleScreen : IScene
     {
         private float _angle;
+        private Matrix _world;
+
+        private Tetrimino _tetrimino;
         
-        public TitleScreen() { }
+        public TitleScreen() 
+        {
+            TetriminoFactory factory = new TetriminoFactory();
+            _tetrimino = factory.Generate(Tetriminoes.J);
+        }
 
         public void Update(GameTime gameTime)
         {
@@ -16,26 +23,13 @@ namespace MonoTetris3D
             // 2 PI bound. I have no idea how the 2 PI bound is significant
             _angle += 0.75f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             _angle %= MathHelper.TwoPi;
+
+            _world = Matrix.CreateScale(5) * Matrix.CreateRotationY(_angle) * Matrix.CreateTranslation(0, 0, -3f);
         }
         
         public void Draw(SpriteBatch spriteBatch, GameTime gameTime)
         {
-            // Draw cube mesh
-            foreach (ModelMesh m in Assets.Models.CubeObject.Meshes)
-            {
-                foreach (ModelMeshPart part in m.MeshParts)
-                {
-                    part.Effect = GameRoot.BasicEffect;
-                    GameRoot.BasicEffect.World = (
-                        Matrix.CreateScale(5) *
-                        Matrix.CreateRotationY(_angle) *
-                        Matrix.CreateTranslation(0, 0, -3f)
-                    );
-                    GameRoot.BasicEffect.DiffuseColor = Color.Red.ToVector3();
-                }
-                m.Draw();
-            }
-
+            _tetrimino.Draw(_world);
         }
     }
 }

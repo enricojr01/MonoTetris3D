@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-    j
+    
 namespace MonoTetris3D
 {
     internal class Tetrimino
@@ -48,7 +48,7 @@ namespace MonoTetris3D
                         foreach (ModelMeshPart part in m.MeshParts)
                         {
                             part.Effect = GameRoot.BasicEffect;
-                            GameRoot.BasicEffect.World = Matrix.CreateTranslation(0.2f * x, 0.2f * -y, 0) * world;
+                            GameRoot.BasicEffect.World = Matrix.CreateTranslation(0.4f * x, 0.4f * -y, 0) * world;
                             GameRoot.BasicEffect.DiffuseColor = Color.ToVector3();
                         }
                         m.Draw();

@@ -45,7 +45,7 @@ namespace MonoTetris3D
                 new Vector3(0, 0, -5),
                 _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight,
-                MathHelper.ToRadians(60)
+                MathHelper.ToRadians(110)
             );
 
             BasicEffect = new BasicEffect(GraphicsDevice);
@@ -57,7 +57,8 @@ namespace MonoTetris3D
             BasicEffect.SpecularPower = 16f;
 
             TitleScreen titleScreen = new TitleScreen();
-            SceneManager.PushScene(titleScreen);
+            TestScene testScene = new TestScene();
+            SceneManager.PushScene(testScene);
         }
 
         protected override void Update(GameTime gameTime)
