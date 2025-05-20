@@ -45,7 +45,7 @@ namespace MonoTetris3D
                 new Vector3(0, 0, -5),
                 _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight,
-                MathHelper.ToRadians(110)
+                MathHelper.ToRadians(100)
             );
 
             BasicEffect = new BasicEffect(GraphicsDevice);

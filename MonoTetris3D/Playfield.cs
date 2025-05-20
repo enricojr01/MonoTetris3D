@@ -1,11 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using System.Collections.Generic;
 
 namespace MonoTetris3D
 {
     internal class Playfield
     {
         private Cell[][] _cells;
+        private List<int> CompletedLines = new List<int>();
         private const int COLUMNS = 10;
         private const int LINES = 20;
 
@@ -35,7 +37,7 @@ namespace MonoTetris3D
                     Color.Gray
                 );
 
-                // right burder;
+                // right border;
                 Assets.Models.DrawCube(
                     Matrix.CreateTranslation(_position) * Matrix.CreateTranslation(COLUMNS * 0.4f, -y * 0.4f, 0),
                     Color.Gray
@@ -117,6 +119,64 @@ namespace MonoTetris3D
 
             // all checks came out clear
             return true;
+        }
+
+        public int ValidateField()
+        {
+            CompletedLines.Clear();
+
+            for (int y = 0; y < LINES; y++)
+            {
+                bool lineClear = true;
+                for (int x = 0; x < COLUMNS; x++)
+                {
+                    if (!_cells[y][x].Occupied)
+                    {
+                        lineClear = false;
+                        break;
+                    }
+                }
+                if (lineClear)
+                {
+                    CompletedLines.Add(y);
+                }
+            }
+
+            return CompletedLines.Count;
+        }
+
+        public void ClearLines()
+        {
+            foreach(int line in CompletedLines)
+            {
+                ClearLine(line);
+            }
+        }
+
+        private void ClearLine(int y)
+        {
+            for (int line = y; line > 0; line--)
+            {
+                _cells[line] = CopyLine(line - 1);
+            }
+
+            for (int column = 0; column < COLUMNS; column++)
+            {
+                Cell c = new Cell() { Occupied = false, Color = Color.Transparent };
+                _cells[0][column] = c;
+            }
+        }
+
+        private Cell[] CopyLine(int line)
+        {
+            Cell[] cells = new Cell[COLUMNS];
+            for(int column = 0; column < COLUMNS; column++)
+            {
+                Cell c = new Cell() { Occupied = _cells[line][column].Occupied, Color = _cells[line][column].Color };
+                cells[column] = c;
+            }
+
+            return cells;
         }
     }
 }
