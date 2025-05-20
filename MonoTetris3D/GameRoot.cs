@@ -76,6 +76,10 @@ namespace MonoTetris3D
         {
             GraphicsDevice.Clear(Color.Black);
 
+            GraphicsDevice.BlendState = BlendState.AlphaBlend;
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            //GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+
             // TODO: Add your drawing code here
             SceneManager.Draw(_spriteBatch, gameTime);
             base.Draw(gameTime);

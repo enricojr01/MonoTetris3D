@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using System;
 using System.Collections.Generic;
 
 namespace MonoTetris3D
@@ -10,8 +11,11 @@ namespace MonoTetris3D
         private List<int> CompletedLines = new List<int>();
         private const int COLUMNS = 10;
         private const int LINES = 20;
-
+        private double _lineClearTimer;
+        private const double HIGHLIGHTTIME = 1;
         private Vector3 _position;
+
+        public event EventHandler<LinesClearedEventArgs> LinesClearedCompleteEvent;
 
         public Playfield(Vector3 position)
         {
@@ -23,6 +27,19 @@ namespace MonoTetris3D
                 for (int j = 0; j < COLUMNS; j++)
                 {
                     _cells[i][j] = new Cell(){ Occupied = false, Color = Color.Black };
+                }
+            }
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (_lineClearTimer > 0)
+            {
+                _lineClearTimer -= gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (_lineClearTimer < 0)
+                {
+                    ClearLines();
                 }
             }
         }
@@ -51,6 +68,20 @@ namespace MonoTetris3D
                     {
                         continue;
                     }
+
+                    if (_lineClearTimer > 0)
+                    {
+                        if (CompletedLines.Contains(y))
+                        {
+                            Assets.Models.DrawCube(
+                                Matrix.CreateTranslation(_position) * Matrix.CreateTranslation(x * 0.4f, -y * 0.4f, 0),
+                                Color.White * (float)(_lineClearTimer / HIGHLIGHTTIME)
+                            );
+                            continue;
+
+                        }
+                    }
+
                     Assets.Models.DrawCube(
                         Matrix.CreateTranslation(_position) * Matrix.CreateTranslation(x * 0.4f, -y * 0.4f, 0),
                         _cells[y][x].Color
@@ -66,6 +97,35 @@ namespace MonoTetris3D
                     Color.Gray
                 );
             }
+        }
+
+        public int ValidateField()
+        {
+            CompletedLines.Clear();
+            for (int y = 0; y < LINES; y++)
+            {
+                bool lineClear = true;
+                for (int x = 0; x < COLUMNS; x++)
+                {
+                    if (!_cells[y][x].Occupied)
+                    {
+                        lineClear = false;
+                        break;
+                    }
+                }
+
+                if (lineClear)
+                {
+                    CompletedLines.Add(y);
+                }
+            }
+
+            if (CompletedLines.Count > 0)
+            {
+                _lineClearTimer = HIGHLIGHTTIME;
+            }
+
+            return CompletedLines.Count;
         }
 
         public bool LockInPlace(Tetrimino shape, int leftcolumn, int topline)
@@ -121,36 +181,14 @@ namespace MonoTetris3D
             return true;
         }
 
-        public int ValidateField()
-        {
-            CompletedLines.Clear();
-
-            for (int y = 0; y < LINES; y++)
-            {
-                bool lineClear = true;
-                for (int x = 0; x < COLUMNS; x++)
-                {
-                    if (!_cells[y][x].Occupied)
-                    {
-                        lineClear = false;
-                        break;
-                    }
-                }
-                if (lineClear)
-                {
-                    CompletedLines.Add(y);
-                }
-            }
-
-            return CompletedLines.Count;
-        }
-
         public void ClearLines()
         {
             foreach(int line in CompletedLines)
             {
                 ClearLine(line);
             }
+
+            RaiseClearedLinesCompleteEvent(new LinesClearedEventArgs() { NumberOfClearedLines = CompletedLines.Count });
         }
 
         private void ClearLine(int y)
@@ -182,6 +220,24 @@ namespace MonoTetris3D
         {
             Matrix world = Matrix.CreateTranslation(_position) * Matrix.CreateTranslation(column * 0.4f, -row * 0.4f, 0);
             t.Draw(world);
+        }
+
+        public void DrawGhostTetrimino(Tetrimino t, int column, int row)
+        {
+            Matrix world = 
+                Matrix.CreateTranslation(_position) *
+                Matrix.CreateTranslation(column * 0.4f, -row * 0.4f, 0);
+
+            t.Draw(world, 0.4f);
+        }
+
+        protected virtual void RaiseClearedLinesCompleteEvent(LinesClearedEventArgs e)
+        {
+            EventHandler<LinesClearedEventArgs> handler = LinesClearedCompleteEvent;
+            if (handler != null)
+            {
+                handler(this, e);
+            }
         }
     }
 }

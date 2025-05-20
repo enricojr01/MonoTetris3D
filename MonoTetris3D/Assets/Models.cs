@@ -22,6 +22,7 @@ namespace MonoTetris3D.Assets
                     part.Effect = GameRoot.BasicEffect;
                     GameRoot.BasicEffect.World = world;
                     GameRoot.BasicEffect.DiffuseColor = color.ToVector3();
+                    GameRoot.BasicEffect.Alpha = 1;
                 }
                 m.Draw();
             }

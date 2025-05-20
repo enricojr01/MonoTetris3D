@@ -33,7 +33,7 @@ namespace MonoTetris3D
             _shapeID = (_shapeID - 1 + Shapes.Length) % Shapes.Length;
         }
 
-        public void Draw(Matrix world)
+        public void Draw(Matrix world, float alpha=1)
         {
             for (int y = 0; y < CurrentShape.shapeBit.Length; y++)
             {
@@ -50,6 +50,7 @@ namespace MonoTetris3D
                             part.Effect = GameRoot.BasicEffect;
                             GameRoot.BasicEffect.World = Matrix.CreateTranslation(0.4f * x, 0.4f * -y, 0) * world;
                             GameRoot.BasicEffect.DiffuseColor = Color.ToVector3();
+                            GameRoot.BasicEffect.Alpha = alpha;
                         }
                         m.Draw();
                     }
